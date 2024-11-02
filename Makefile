@@ -12,7 +12,9 @@ DARK_CYAN = \033[2;36m
 WHITE = \033[0;37m
 RESET = \033[0m
 
-SRCS = philo.c
+SRCS =	philo.c \
+		init.c \
+		utils.c
 
 OBJS = $(SRCS:.c=.o)
 
