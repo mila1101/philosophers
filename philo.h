@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/02 16:42:03 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/03 16:03:54 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct	s_events
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				meals_needed;
+	int				eaten;
 	int				dead;
 	pthread_mutex_t	print_lock;
 	t_philo			*philo;

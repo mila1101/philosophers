@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/02 16:46:01 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/03 16:08:18 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,16 @@ t_events	*init_events(char **argv)
 		events->meals_needed = ft_atoi(argv[5]);
 	else
 		events->meals_needed = -1;
-	//probably some other things too
+	events->eaten = INT_MAX;
+	events->dead = 0;
+	events->philo = malloc(sizeof(t_philo) * events->philo_num);
+	if (!events->philo)
+	{
+		return (NULL);
+	}
+	pthread_mutex_init(&events->print_lock, NULL);
+	init_philo(events);
+	return (events);
 }
 
 int	main(int argc, char **argv)
@@ -35,5 +44,11 @@ int	main(int argc, char **argv)
 	t_events	*events;
 
 	//needs error handling here
+	if (argc < 5 || argc > 6)
+	{
+		printf("Correct use: [philosophers] [death] [eat] [sleep] optional: [meals]\n");
+		return (-1);
+	}
 	events = init_events(argv);
+	return (0);
 }
