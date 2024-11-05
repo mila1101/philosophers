@@ -14,7 +14,8 @@ RESET = \033[0m
 
 SRCS =	philo.c \
 		init.c \
-		utils.c
+		utils.c \
+		time.c
 
 OBJS = $(SRCS:.c=.o)
 
