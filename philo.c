@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/05 10:54:10 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:17:10 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,11 @@ t_events	*init_events(char **argv)
 	events->dead = 0;
 	events->philo = malloc(sizeof(t_philo) * events->philo_num);
 	events->forks = malloc(sizeof(t_forks) * events->philo_num);
-	if (!events->philo || events->forks)
+	if (!events->philo || !events->forks)
 	{
+		free(events->philo);
+		free(events->forks);
+		free(events);
 		return (NULL);
 	}
 	pthread_mutex_init(&events->print_lock, NULL);
@@ -43,7 +46,7 @@ t_events	*init_events(char **argv)
 	{
 		events->forks[i].taken = 0;
 		events->forks[i].lock_fork = malloc(sizeof(pthread_mutex_t));
-
+		pthread_mutex_init(events->forks[i].lock_fork, NULL);
 		i++;
 	}
 	return (events);
@@ -60,28 +63,32 @@ void *routine(void *arg)
 	events = philo->events;
 	l_fork = philo->id - 1;
 	r_fork = philo->id % events->philo_num;
+	philo->last_meal_time = curr_time();
 	while (!events->dead)
 	{
 		print_action(events, philo->id, "is thinking");
 		pthread_mutex_lock(events->forks[l_fork].lock_fork);
 		print_action(events, philo->id, "has taken a fork");
 		pthread_mutex_lock(events->forks[r_fork].lock_fork);
+		if (events->dead)
+		{
+			pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+			pthread_mutex_unlock(events->forks[r_fork].lock_fork);
+			break ;
+		}
 		print_action(events, philo->id, "has taken a fork");
 
-		// Eating
 		pthread_mutex_lock(&philo->philo_lock);
 		print_action(events, philo->id, "is eating");
 		philo->last_meal_time = curr_time();
 		philo->meals_eaten++;
 		pthread_mutex_unlock(&philo->philo_lock);
 
-		usleep(events->time_to_eat * 1000);  // Eating duration
-
-		// Put down forks
+		usleep(events->time_to_eat * 1000);
 		pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+		if (events->dead)
+			break ;
 		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
-
-		// Sleeping
 		print_action(events, philo->id, "is sleeping");
 		usleep(events->time_to_sleep * 1000);
 	}
@@ -91,6 +98,7 @@ void *routine(void *arg)
 int	main(int argc, char **argv)
 {
 	t_events	*events;
+	pthread_t	monitor;
 	int			i;
 
 	//needs error handling here
@@ -108,11 +116,13 @@ int	main(int argc, char **argv)
 		pthread_create(&events->philo[i].thread, NULL, routine, &events->philo[i]);
 		i++;
 	}
+	pthread_create(&monitor, NULL, death_monitor, events);
 	i = 0;
 	while (i < events->philo_num)
 	{
 		pthread_join(events->philo[i].thread, NULL);
 		i++;
 	}
+	pthread_join(monitor, NULL);
 	return (0);
 }
