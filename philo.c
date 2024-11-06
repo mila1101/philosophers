@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/05 16:17:10 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:54:50 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_events	*init_events(char **argv)
 	events->time_to_die = ft_atoi(argv[2]);
 	events->time_to_eat = ft_atoi(argv[3]);
 	events->time_to_sleep = ft_atoi(argv[4]);
+	//it should stop when the meals are eaten which its not doing now
 	if (argv[5])
 		events->meals_needed = ft_atoi(argv[5]);
 	else

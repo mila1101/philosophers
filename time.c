@@ -6,22 +6,28 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:48:29 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/05 16:05:50 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:43:20 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	curr_time(void)
+long long	curr_time(void)
 {
-	struct timeval	tv;
+	static long long	start = -1;
+	struct timeval		tv;
+	long long				curr_time;
+
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	curr_time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	if (start == -1)
+		start = curr_time;
+	return (curr_time - start);
 }
 
 void	print_action(t_events *events, int id, const char *action)
 {
 	pthread_mutex_lock(&events->print_lock);
-	printf("[insert timestamp here] %d %s\n", id, action);
+	printf("%lld %d %s\n", curr_time(),  id, action);
 	pthread_mutex_unlock(&events->print_lock);
 }
