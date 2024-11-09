@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/06 16:41:51 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/09 17:35:49 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_events
 	int				eaten;
 	int				dead;
 	pthread_mutex_t	print_lock;
+	pthread_mutex_t	meal_lock;
 	t_philo			*philo;
 	t_forks			*forks;
 }					t_events;

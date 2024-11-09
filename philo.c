@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/06 16:54:50 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/09 17:49:49 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ t_events	*init_events(char **argv)
 		events->meals_needed = ft_atoi(argv[5]);
 	else
 		events->meals_needed = -1;
-	events->eaten = INT_MAX;
+	events->eaten = 0;
+	pthread_mutex_init(&events->meal_lock, NULL);
 	events->dead = 0;
 	events->philo = malloc(sizeof(t_philo) * events->philo_num);
 	events->forks = malloc(sizeof(t_forks) * events->philo_num);
@@ -67,6 +68,13 @@ void *routine(void *arg)
 	philo->last_meal_time = curr_time();
 	while (!events->dead)
 	{
+		pthread_mutex_lock(&events->meal_lock);
+		if (events->eaten >= events->meals_needed)
+		{
+			pthread_mutex_unlock(&events->meal_lock);
+			break ;
+		}
+		pthread_mutex_unlock(&events->meal_lock);
 		print_action(events, philo->id, "is thinking");
 		pthread_mutex_lock(events->forks[l_fork].lock_fork);
 		print_action(events, philo->id, "has taken a fork");
@@ -83,12 +91,18 @@ void *routine(void *arg)
 		print_action(events, philo->id, "is eating");
 		philo->last_meal_time = curr_time();
 		philo->meals_eaten++;
+		if (philo->meals_eaten == events->meals_needed)
+		{
+			pthread_mutex_lock(&events->meal_lock);
+			events->eaten++;
+			pthread_mutex_unlock(&events->meal_lock);
+		}
 		pthread_mutex_unlock(&philo->philo_lock);
 
 		usleep(events->time_to_eat * 1000);
 		pthread_mutex_unlock(events->forks[l_fork].lock_fork);
-		if (events->dead)
-			break ;
+		//if (events->dead)
+		//	break ;
 		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
 		print_action(events, philo->id, "is sleeping");
 		usleep(events->time_to_sleep * 1000);
@@ -111,6 +125,7 @@ int	main(int argc, char **argv)
 	events = init_events(argv);
 	if (!events)
 		return (1);
+	pthread_mutex_init(&events->meal_lock, NULL);
 	i = 0;
 	while (i < events->philo_num)
 	{
@@ -124,6 +139,7 @@ int	main(int argc, char **argv)
 		pthread_join(events->philo[i].thread, NULL);
 		i++;
 	}
+	pthread_mutex_destroy(&events->meal_lock);
 	pthread_join(monitor, NULL);
 	return (0);
 }
