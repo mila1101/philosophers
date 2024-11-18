@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:48:29 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/06 16:43:20 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:28:42 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ long long	curr_time(void)
 	curr_time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	if (start == -1)
 		start = curr_time;
-	return (curr_time - start);
+	curr_time -= start;
+	return ((curr_time / 100) * 100);
 }
 
 void	print_action(t_events *events, int id, const char *action)

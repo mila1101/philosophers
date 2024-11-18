@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:06:16 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/05 16:18:26 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:53:04 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,18 @@ void *death_monitor(void *arg)
 				events->dead = 1;
 				print_action(events, events->philo[i].id, "died");
 				pthread_mutex_unlock(&events->philo[i].philo_lock);
-				exit (0);
+				return (NULL);
 			}
 			pthread_mutex_unlock(&events->philo[i].philo_lock);
 			i++;
 		}
+		pthread_mutex_lock(&events->meal_lock);
+		if (events->meals_needed != -1 && events->eaten >= events->philo_num)
+		{
+			pthread_mutex_unlock(&events->meal_lock);
+			return NULL;
+		}
+		pthread_mutex_unlock(&events->meal_lock);
 		usleep(1000);
 	}
 	return (NULL);

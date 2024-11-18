@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/09 17:49:49 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:56:57 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void *routine(void *arg)
 	while (!events->dead)
 	{
 		pthread_mutex_lock(&events->meal_lock);
-		if (events->eaten >= events->meals_needed)
+		if (events->eaten >= events->meals_needed && events->meals_needed != -1)
 		{
 			pthread_mutex_unlock(&events->meal_lock);
 			break ;
