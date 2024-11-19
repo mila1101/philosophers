@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/19 11:16:58 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:42:56 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,13 @@ void *routine(void *arg)
 		}
 		pthread_mutex_unlock(&philo->philo_lock);
 
-		usleep(events->time_to_eat * 1000);
+		ft_usleep(events->time_to_eat * 1000);
 		pthread_mutex_unlock(events->forks[l_fork].lock_fork);
 		//if (events->dead)
 		//	break ;
 		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
 		print_action(events, philo->id, "is sleeping");
-		usleep(events->time_to_sleep * 1000);
+		ft_usleep(events->time_to_sleep * 1000);
 	}
 	return (NULL);
 }

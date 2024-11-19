@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:06:16 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/19 11:13:55 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:42:40 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void *death_monitor(void *arg)
 		}
 		if (events->meals_needed != -1 && all_ate)
 			return (NULL);
-		usleep(1000);
+		ft_usleep(1000);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/15 15:16:01 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:43:20 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,6 @@ void		*death_monitor(void *arg);
 int				ft_atoi(const char *str);
 long long		curr_time(void);
 void			print_action(t_events *events, int id, const char *action);
+int				ft_usleep(useconds_t time);
 
 #endif
