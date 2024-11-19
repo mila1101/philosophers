@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:06:16 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/12 16:53:04 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:13:55 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void *death_monitor(void *arg)
 	t_events	*events;
 	int			i;
 	long		since_last_meal;
+	int			all_ate;
 
 	events  = (t_events *)arg;
 	while (!events->dead)
@@ -36,13 +37,18 @@ void *death_monitor(void *arg)
 			pthread_mutex_unlock(&events->philo[i].philo_lock);
 			i++;
 		}
-		pthread_mutex_lock(&events->meal_lock);
-		if (events->meals_needed != -1 && events->eaten >= events->philo_num)
+		all_ate = 1;
+		i = 0;
+		while (i < events->philo_num)
 		{
-			pthread_mutex_unlock(&events->meal_lock);
-			return NULL;
+			pthread_mutex_lock(&events->philo[i].philo_lock);
+			if (events->philo[i].meals_eaten < events->meals_needed)
+				all_ate = 0;
+			pthread_mutex_unlock(&events->philo[i].philo_lock);
+			i++;
 		}
-		pthread_mutex_unlock(&events->meal_lock);
+		if (events->meals_needed != -1 && all_ate)
+			return (NULL);
 		usleep(1000);
 	}
 	return (NULL);

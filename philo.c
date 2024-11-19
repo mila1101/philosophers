@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/12 16:56:57 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:16:58 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,8 @@ void *routine(void *arg)
 	philo->last_meal_time = curr_time();
 	while (!events->dead)
 	{
-		pthread_mutex_lock(&events->meal_lock);
-		if (events->eaten >= events->meals_needed && events->meals_needed != -1)
-		{
-			pthread_mutex_unlock(&events->meal_lock);
-			break ;
-		}
-		pthread_mutex_unlock(&events->meal_lock);
+		if (events->meals_needed != -1 && philo->meals_eaten >= events->meals_needed)
+			break;
 		print_action(events, philo->id, "is thinking");
 		pthread_mutex_lock(events->forks[l_fork].lock_fork);
 		print_action(events, philo->id, "has taken a fork");
