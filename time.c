@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:48:29 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/15 15:28:42 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:39:46 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ long long	curr_time(void)
 		start = curr_time;
 	curr_time -= start;
 	return ((curr_time / 100) * 100);
+}
+
+int			ft_usleep(useconds_t time)
+{
+	long long	start;
+	
+	start = curr_time();
+	while ((curr_time() - start) < time)
+		usleep(time / 10);
+	return (0);
 }
 
 void	print_action(t_events *events, int id, const char *action)
