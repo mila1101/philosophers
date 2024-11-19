@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/19 11:42:56 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:18:46 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,15 @@ void *routine(void *arg)
 	{
 		if (events->meals_needed != -1 && philo->meals_eaten >= events->meals_needed)
 			break;
+		if (events->dead)
+			break ;
 		print_action(events, philo->id, "is thinking");
 		pthread_mutex_lock(events->forks[l_fork].lock_fork);
+		if (events->dead)
+		{
+			pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+			break ;
+		}
 		print_action(events, philo->id, "has taken a fork");
 		pthread_mutex_lock(events->forks[r_fork].lock_fork);
 		if (events->dead)
@@ -81,8 +88,14 @@ void *routine(void *arg)
 			break ;
 		}
 		print_action(events, philo->id, "has taken a fork");
-
 		pthread_mutex_lock(&philo->philo_lock);
+		if (events->dead)
+		{
+			pthread_mutex_unlock(&philo->philo_lock);
+			pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+			pthread_mutex_unlock(events->forks[r_fork].lock_fork);
+			break ;
+		}
 		print_action(events, philo->id, "is eating");
 		philo->last_meal_time = curr_time();
 		philo->meals_eaten++;
@@ -93,11 +106,10 @@ void *routine(void *arg)
 			pthread_mutex_unlock(&events->meal_lock);
 		}
 		pthread_mutex_unlock(&philo->philo_lock);
-
 		ft_usleep(events->time_to_eat * 1000);
 		pthread_mutex_unlock(events->forks[l_fork].lock_fork);
-		//if (events->dead)
-		//	break ;
+		if (events->dead)
+			break ;
 		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
 		print_action(events, philo->id, "is sleeping");
 		ft_usleep(events->time_to_sleep * 1000);
