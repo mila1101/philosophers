@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:48:29 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/19 11:49:25 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/20 17:32:16 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,10 @@
 
 long long	curr_time(void)
 {
-	static long long	start = -1;
-	struct timeval		tv;
-	long long				curr_time;
+	struct timeval  tv;
 
 	gettimeofday(&tv, NULL);
-	curr_time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	if (start == -1)
-		start = curr_time;
-	curr_time -= start;
-	return ((curr_time / 100) * 100);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
 int			ft_usleep(useconds_t time)
@@ -31,14 +25,14 @@ int			ft_usleep(useconds_t time)
 	long long	start;
 
 	start = curr_time();
-	while ((curr_time() - start) < (time / 1000))
-		usleep(100);
+	while ((curr_time() - start) < time / 2)
+		usleep(50);
 	return (0);
 }
 
 void	print_action(t_events *events, int id, const char *action)
 {
 	pthread_mutex_lock(&events->print_lock);
-	printf("%lld %d %s\n", curr_time(),  id, action);
+	printf("%lld %d %s\n", curr_time() - events->start,  id, action);
 	pthread_mutex_unlock(&events->print_lock);
 }

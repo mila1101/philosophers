@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/19 11:43:20 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:34:54 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct	s_events
 	int				time_to_sleep;
 	int				meals_needed;
 	int				eaten;
+	long			start;
 	int				dead;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	meal_lock;
