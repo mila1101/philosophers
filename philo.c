@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/20 17:46:12 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/20 19:21:26 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,6 @@ int	main(int argc, char **argv)
 	if (!events)
 		return (1);
 	pthread_mutex_init(&events->meal_lock, NULL);
-	pthread_create(&monitor, NULL, death_monitor, events);
 	i = 0;
 	//pthread_join(monitor, NULL);
 	while (i < events->philo_num)
@@ -143,6 +142,7 @@ int	main(int argc, char **argv)
 		pthread_create(&events->philo[i].thread, NULL, routine, &events->philo[i]);
 		i++;
 	}
+	pthread_create(&monitor, NULL, death_monitor, events);
 	i = 0;
 	while (i < events->philo_num)
 	{
