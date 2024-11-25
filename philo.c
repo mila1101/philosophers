@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/20 19:21:26 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/23 15:48:53 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ t_events	*init_events(char **argv)
 		return (NULL);
 	}
 	pthread_mutex_init(&events->print_lock, NULL);
+	events->dead_mutex = malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(events->dead_mutex, NULL);
 	init_philo(events);
 	i = 0;
 	while (i < events->philo_num)
@@ -96,8 +98,8 @@ void *routine(void *arg)
 			pthread_mutex_unlock(events->forks[r_fork].lock_fork);
 			break ;
 		}
-		print_action(events, philo->id, "is eating");
 		philo->last_meal_time = curr_time();
+		print_action(events, philo->id, "is eating");
 		philo->meals_eaten++;
 		if (philo->meals_eaten == events->meals_needed)
 		{
@@ -107,13 +109,13 @@ void *routine(void *arg)
 		}
 		pthread_mutex_unlock(&philo->philo_lock);
 		ft_usleep(events->time_to_eat);
-		//usleep(10000);
+		//usleep(200);
 		pthread_mutex_unlock(events->forks[l_fork].lock_fork);
 		if (events->dead)
 			break ;
 		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
 		print_action(events, philo->id, "is sleeping");
-		//usleep(10000);
+		//usleep(200);
 		ft_usleep(events->time_to_sleep);
 	}
 	return (NULL);
@@ -153,3 +155,4 @@ int	main(int argc, char **argv)
 	pthread_join(monitor, NULL);
 	return (0);
 }
+

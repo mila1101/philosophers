@@ -6,11 +6,24 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:06:16 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/20 18:15:06 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/25 11:15:04 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+
+//int	undead(t_events *events)
+//{
+//	pthread_mutex_lock(events->dead_mutex);
+//	if (events->dead)
+//	{
+//		pthread_mutex_unlock(events->dead_mutex);
+//		return (1);
+//	}
+//	pthread_mutex_unlock(events->dead_mutex);
+//	return (0);
+//}
 
 void *death_monitor(void *arg)
 {
@@ -20,40 +33,85 @@ void *death_monitor(void *arg)
 	int			all_ate;
 
 	events  = (t_events *)arg;
-	while (!events->dead)
+	while (1)
 	{
+		pthread_mutex_lock(events->dead_mutex);
+		if (events->dead)
+		{
+			pthread_mutex_unlock(events->dead_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(events->dead_mutex);
+		all_ate = 1;
 		i = 0;
-		while(i < events->philo_num)
+		while (i < events->philo_num)
 		{
 			pthread_mutex_lock(&events->philo[i].philo_lock);
 			since_last_meal = curr_time() - events->philo[i].last_meal_time;
-			if (since_last_meal >= events->time_to_die)
+			if (since_last_meal > events->time_to_die)
 			{
+				pthread_mutex_lock(events->dead_mutex);
 				events->dead = 1;
+				pthread_mutex_unlock(events->dead_mutex);
 				print_action(events, events->philo[i].id, "died");
 				pthread_mutex_unlock(&events->philo[i].philo_lock);
 				return (NULL);
 			}
+			if (events->meals_needed != -1 && events->philo[i].meals_eaten < events->meals_needed)
+				all_ate = 0;
 			pthread_mutex_unlock(&events->philo[i].philo_lock);
 			i++;
 		}
-		if (events->meals_needed != -1)
-		{
-			all_ate = 1;
-			i = 0;
-			while (i < events->philo_num)
-			{
-				pthread_mutex_lock(&events->philo[i].philo_lock);
-				if (events->philo[i].meals_eaten < events->meals_needed)
-					all_ate = 0;
-				pthread_mutex_unlock(&events->philo[i].philo_lock);
-				i++;
-			}
-			if (events->meals_needed != -1 && all_ate)
-				return (NULL);
-		}
-		//ft_usleep(1000);
-		usleep(50);
+		if (all_ate && events->meals_needed != -1)
+			break;
+		usleep(100);
 	}
 	return (NULL);
 }
+
+
+//void *death_monitor(void *arg)
+//{
+//	t_events	*events;
+//	int			i;
+//	long		since_last_meal;
+//	int			all_ate;
+
+//	events  = (t_events *)arg;
+//	while (!events->dead)
+//	{
+//		i = 0;
+//		while(i < events->philo_num)
+//		{
+//			//pthread_mutex_lock(&events->philo[i].philo_lock);
+//			since_last_meal = curr_time() - events->philo[i].last_meal_time;
+//			if (since_last_meal > events->time_to_die)
+//			{
+//				events->dead = 1;
+//				print_action(events, events->philo[i].id, "died");
+//				//pthread_mutex_unlock(&events->philo[i].philo_lock);
+//				return (NULL);
+//			}
+//			//pthread_mutex_unlock(&events->philo[i].philo_lock);
+//			i++;
+//		}
+//		if (events->meals_needed != -1)
+//		{
+//			all_ate = 1;
+//			i = 0;
+//			while (i < events->philo_num)
+//			{
+//				pthread_mutex_lock(&events->philo[i].philo_lock);
+//				if (events->philo[i].meals_eaten < events->meals_needed)
+//					all_ate = 0;
+//				pthread_mutex_unlock(&events->philo[i].philo_lock);
+//				i++;
+//			}
+//			if (events->meals_needed != -1 && all_ate)
+//				return (NULL);
+//		}
+//		//ft_usleep(1000);
+//		usleep(50);
+//	}
+//	return (NULL);
+//}

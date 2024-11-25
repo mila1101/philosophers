@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/20 19:24:12 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/25 11:22:03 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct	s_events
 	int				dead;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	meal_lock;
+	pthread_mutex_t	*dead_mutex;
 	t_philo			*philo;
 	t_forks			*forks;
 }					t_events;
@@ -63,5 +64,6 @@ int				ft_atoi(const char *str);
 long			curr_time(void);
 void			print_action(t_events *events, int id, const char *action);
 int				ft_usleep(useconds_t time);
+//int	undead(t_events *events);
 
 #endif
