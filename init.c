@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 16:01:40 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/22 11:08:57 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:40:13 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	init_philo(t_events *events)
 	int	i;
 
 	i = 0;
-	events->start = curr_time();
 	while(i < events->philo_num)
 	{
 		events->philo[i].id = i + 1;

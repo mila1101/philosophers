@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:48:29 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/22 10:47:23 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:24:12 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int			ft_usleep(useconds_t time)
 	long	start;
 
 	start = curr_time();
-	while ((curr_time() - start) < time / 2)
-		usleep(200);
+	while ((curr_time() - start) < time)
+		usleep(500);
 	return (0);
 }
 

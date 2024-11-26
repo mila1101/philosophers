@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/23 15:48:53 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/26 13:40:11 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_events	*init_events(char **argv)
 	pthread_mutex_init(events->dead_mutex, NULL);
 	init_philo(events);
 	i = 0;
+	events->start = curr_time();
 	while (i < events->philo_num)
 	{
 		events->forks[i].taken = 0;
@@ -68,6 +69,8 @@ void *routine(void *arg)
 	l_fork = philo->id - 1;
 	r_fork = philo->id % events->philo_num;
 	philo->last_meal_time = curr_time();
+	if (philo->id % 2 == 0)
+		ft_usleep(events->time_to_eat / 2);
 	while (!events->dead)
 	{
 		if (events->meals_needed != -1 && philo->meals_eaten >= events->meals_needed)
