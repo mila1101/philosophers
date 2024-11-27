@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/26 13:40:11 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:01:02 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_events	*init_events(char **argv)
 	events->time_to_die = ft_atoi(argv[2]);
 	events->time_to_eat = ft_atoi(argv[3]);
 	events->time_to_sleep = ft_atoi(argv[4]);
-	//it should stop when the meals are eaten which its not doing now
 	if (argv[5])
 		events->meals_needed = ft_atoi(argv[5]);
 	else
@@ -69,6 +68,8 @@ void *routine(void *arg)
 	l_fork = philo->id - 1;
 	r_fork = philo->id % events->philo_num;
 	philo->last_meal_time = curr_time();
+
+	print_action(events, philo->id, "is thinking");
 	if (philo->id % 2 == 0)
 		ft_usleep(events->time_to_eat / 2);
 	while (!events->dead)
@@ -77,7 +78,6 @@ void *routine(void *arg)
 			break;
 		if (events->dead)
 			break ;
-		print_action(events, philo->id, "is thinking");
 		pthread_mutex_lock(events->forks[l_fork].lock_fork);
 		if (events->dead)
 		{
@@ -118,8 +118,10 @@ void *routine(void *arg)
 			break ;
 		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
 		print_action(events, philo->id, "is sleeping");
-		//usleep(200);
 		ft_usleep(events->time_to_sleep);
+		if (!events->dead)
+			print_action(events, philo->id, "is thinking");
+		//usleep(200);
 	}
 	return (NULL);
 }
