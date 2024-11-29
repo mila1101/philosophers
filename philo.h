@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/28 13:39:09 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:15:56 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ typedef struct	s_events
 }					t_events;
 
 /* INIT */
-void		init_philo(t_events *events);
-t_events	*init_events(char **argv);
-void		*death_monitor(void *arg);
+void				init_philo(t_events *events);
+t_events			*init_event_values(char **argv);
+t_events			*init_events(char **argv);
+t_events			*cleanup_events(t_events *events);
+void				*death_monitor(void *arg);
 
 /* UTILS */
 int				ft_atoi(const char *str);
