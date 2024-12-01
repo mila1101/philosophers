@@ -16,7 +16,8 @@ SRCS =	philo.c \
 		init.c \
 		utils.c \
 		time.c \
-		monitor.c
+		monitor.c \
+		action.c
 
 OBJS = $(SRCS:.c=.o)
 

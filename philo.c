@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/29 16:17:09 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/01 14:15:08 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	if_ended(t_events *events)
 	return (ended);
 }
 
-void *routine(void *arg)
+void	*routine(void *arg)
 {
 	t_philo		*philo;
 	t_events	*events;
@@ -30,15 +30,7 @@ void *routine(void *arg)
 	int			r_fork;
 
 	philo = (t_philo *)arg;
-	events = philo->events;
-	l_fork = philo->id - 1;
-	r_fork = philo->id % events->philo_num;
-	pthread_mutex_lock(&philo->philo_lock);
-	philo->last_meal_time = curr_time();
-	pthread_mutex_unlock(&philo->philo_lock);
-	print_action(events, philo->id, "is thinking");
-	if (philo->id % 2 == 0)
-		ft_usleep(events->time_to_eat / 2);
+	i_philo(philo, &events, &l_fork, &r_fork);
 	while (!events->dead)
 	{
 		pthread_mutex_lock(events->dead_mutex);
@@ -48,73 +40,13 @@ void *routine(void *arg)
 			break ;
 		}
 		pthread_mutex_unlock(events->dead_mutex);
-		if (l_fork < r_fork)
-		{
-			pthread_mutex_lock(events->forks[l_fork].lock_fork);
-			if (if_ended(events))
-			{
-				pthread_mutex_unlock(events->forks[l_fork].lock_fork);
-				break ;
-			}
-			print_action(events, philo->id, "has taken a fork");
-			if (events->philo_num == 1)
-			{
-				ft_usleep(events->time_to_die);
-				return (pthread_mutex_unlock(events->forks[l_fork].lock_fork), NULL);
-			}
-			pthread_mutex_lock(events->forks[r_fork].lock_fork);
-			if (if_ended(events))
-			{
-				pthread_mutex_unlock(events->forks[l_fork].lock_fork);
-				pthread_mutex_unlock(events->forks[r_fork].lock_fork);
-				break ;
-			}
-			print_action(events, philo->id, "has taken a fork");
-		}
-		else
-		{
-			pthread_mutex_lock(events->forks[r_fork].lock_fork);
-			if (if_ended(events))
-			{
-				pthread_mutex_unlock(events->forks[r_fork].lock_fork);
-				break ;
-			}
-			print_action(events, philo->id, "has taken a fork");
-			if (events->philo_num == 1)
-			{
-				ft_usleep(events->time_to_die);
-				return (pthread_mutex_unlock(events->forks[r_fork].lock_fork), NULL);
-			}
-			pthread_mutex_lock(events->forks[l_fork].lock_fork);
-			if (if_ended(events))
-			{
-				pthread_mutex_unlock(events->forks[r_fork].lock_fork);
-				pthread_mutex_unlock(events->forks[l_fork].lock_fork);
-				break ;
-			}
-			print_action(events, philo->id, "has taken a fork");
-		}
-		pthread_mutex_lock(&philo->philo_lock);
-		philo->last_meal_time = curr_time();
-		print_action(events, philo->id, "is eating");
-		philo->meals_eaten++;
-		pthread_mutex_unlock(&philo->philo_lock);
-		if (philo->meals_eaten == events->meals_needed)
-		{
-			pthread_mutex_lock(&events->meal_lock);
-			events->eaten++;
-			pthread_mutex_unlock(&events->meal_lock);
-		}
-		ft_usleep(events->time_to_eat);
-		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
-		pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+		if (take_forks(events, l_fork, r_fork, philo))
+			break ;
+		eat(philo, events);
+		release_forks(events, l_fork, r_fork);
 		if (if_ended(events))
 			break ;
-		print_action(events, philo->id, "is sleeping");
-		ft_usleep(events->time_to_sleep);
-		if (if_ended(events))
-			break ;
-		print_action(events, philo->id, "is thinking");
+		sleep_and_think(philo, events);
 	}
 	return (NULL);
 }
@@ -127,7 +59,7 @@ int	main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 	{
-		printf("Correct use: [philosophers] [death] [eat] [sleep] optional: [meals]\n");
+		printf("input: [philos] [death] [eat] [sleep] optional: [meals]\n");
 		return (1);
 	}
 	events = init_events(argv);
@@ -136,7 +68,8 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < events->philo_num)
 	{
-		pthread_create(&events->philo[i].thread, NULL, routine, &events->philo[i]);
+		pthread_create(&events->philo[i].thread,
+			NULL, routine, &events->philo[i]);
 		i++;
 	}
 	pthread_create(&monitor, NULL, death_monitor, events);

@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/29 16:15:56 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/01 14:44:17 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <stdlib.h>
 # include <limits.h>
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	int				id;
 	int				meals_eaten;
@@ -31,13 +31,13 @@ typedef struct	s_philo
 	struct s_events	*events;
 }					t_philo;
 
-typedef struct	s_forks
+typedef struct s_forks
 {
 	int				taken;
 	pthread_mutex_t	*lock_fork;
 }					t_forks;
 
-typedef struct	s_events
+typedef struct s_events
 {
 	int				philo_num;
 	int				time_to_die;
@@ -61,12 +61,19 @@ t_events			*init_events(char **argv);
 t_events			*cleanup_events(t_events *events);
 void				*death_monitor(void *arg);
 
+/* ACTION */
+void				i_philo(t_philo *philo, t_events **events, int *l_fork, int *r_fork);
+int					take_forks(t_events *events, int l_fork, int r_fork, t_philo *philo);
+void				release_forks(t_events *events, int l_fork, int r_fork);
+void				eat(t_philo *philo, t_events *events);
+void				sleep_and_think(t_philo *philo, t_events *events);
+
 /* UTILS */
-int				ft_atoi(const char *str);
-int				if_ended(t_events *events);
-long			curr_time(void);
-void			print_action(t_events *events, int id, const char *action);
-int				ft_usleep(useconds_t time);
+int					ft_atoi(const char *str);
+int					if_ended(t_events *events);
+long				curr_time(void);
+void				print_action(t_events *events, int id, const char *action);
+int					ft_usleep(useconds_t time);
 //int	undead(t_events *events);
 
 #endif
