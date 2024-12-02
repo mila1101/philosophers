@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/02 11:06:28 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/02 12:43:34 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	if_ended(t_events *events)
 	pthread_mutex_unlock(events->dead_mutex);
 	return (ended);
 }
-
 void	*routine(void *arg)
 {
 	t_philo		*philo;
@@ -31,25 +30,48 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	i_philo(philo, &events, &l_fork, &r_fork);
-	while (!events->dead)
+	while (!if_ended(events))
 	{
-		pthread_mutex_lock(events->dead_mutex);
-		if (events->dead || (events->meals_needed != -1 && philo->meals_eaten >= events->meals_needed))
-		{
-			pthread_mutex_unlock(events->dead_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(events->dead_mutex);
 		if (take_forks(events, l_fork, r_fork, philo))
-			break ;
+			break;
 		eat(philo, events);
 		release_forks(events, l_fork, r_fork);
 		if (if_ended(events))
-			break ;
+			break;
 		sleep_and_think(philo, events);
 	}
 	return (NULL);
 }
+
+
+//void	*routine(void *arg)
+//{
+//	t_philo		*philo;
+//	t_events	*events;
+//	int			l_fork;
+//	int			r_fork;
+
+//	philo = (t_philo *)arg;
+//	i_philo(philo, &events, &l_fork, &r_fork);
+//	while (!events->dead)
+//	{
+//		pthread_mutex_lock(events->dead_mutex);
+//		if (events->dead || (events->meals_needed != -1 && philo->meals_eaten >= events->meals_needed))
+//		{
+//			pthread_mutex_unlock(events->dead_mutex);
+//			break ;
+//		}
+//		pthread_mutex_unlock(events->dead_mutex);
+//		if (take_forks(events, l_fork, r_fork, philo))
+//			break ;
+//		eat(philo, events);
+//		release_forks(events, l_fork, r_fork);
+//		if (if_ended(events))
+//			break ;
+//		sleep_and_think(philo, events);
+//	}
+//	return (NULL);
+//}
 
 int	main(int argc, char **argv)
 {

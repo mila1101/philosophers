@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/02 11:11:25 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/02 12:48:56 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int					if_ended(t_events *events);
 long				curr_time(void);
 void				print_action(t_events *events, int id, const char *action);
 int					ft_usleep(useconds_t time);
-//int	undead(t_events *events);
+int					ft_isdigit(char *str);
+int					check_input(char **argv);
 
 #endif

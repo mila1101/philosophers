@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 16:21:01 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/02 16:26:33 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/02 12:32:22 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,38 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (num * sign);
+}
+
+int	ft_isdigit(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	check_input(char **argv)
+{
+	int	i;
+	int	num;
+
+	i = 1;
+	while (argv[i])
+	{
+		num = ft_atoi(argv[i]);
+		if (num < 1 || num > INT_MAX || (!ft_isdigit(argv[i]))
+			|| ft_atoi(argv[1]) == 0)
+		{
+			printf("Wrong input!\n");
+			return (1);
+		}
+		i++;
+	}
+	return (0);
 }

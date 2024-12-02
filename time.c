@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:48:29 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/29 13:38:37 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/02 12:45:43 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int			ft_usleep(useconds_t time)
 void	print_action(t_events *events, int id, const char *action)
 {
 	pthread_mutex_lock(&events->print_lock);
-	printf("%ld %d %s\n", curr_time() - events->start, id, action);
+	if (!if_ended(events))
+		printf("%ld %d %s\n", curr_time() - events->start, id, action);
 	pthread_mutex_unlock(&events->print_lock);
 }

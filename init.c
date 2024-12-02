@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 16:01:40 by msoklova          #+#    #+#             */
-/*   Updated: 2024/11/29 16:16:17 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/02 12:04:59 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ t_events	*init_event_values(char **argv)
 
 	events = malloc(sizeof(t_events));
 	if (!events)
+		return (NULL);
+	if (check_input(argv))
 		return (NULL);
 	events->philo_num = ft_atoi(argv[1]);
 	events->time_to_die = ft_atoi(argv[2]);
