@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 13:55:46 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/01 14:15:03 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/02 11:10:57 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,19 @@ void	i_philo(t_philo *philo, t_events **events, int *l_fork, int *r_fork)
 		ft_usleep((*events)->time_to_eat / 2);
 }
 
+int	one_philo(t_events *events, int l_fork, t_philo *philo)
+{
+	pthread_mutex_lock(events->forks[l_fork].lock_fork);
+	print_action(events, philo->id, "has taken a fork");
+	ft_usleep(events->time_to_die);
+	pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+	return (1);
+}
+
 int	take_forks(t_events *events, int l_fork, int r_fork, t_philo *philo)
 {
+	if (events->philo_num == 1)
+		return (one_philo(events, l_fork, philo));
 	if (l_fork < r_fork)
 	{
 		pthread_mutex_lock(events->forks[l_fork].lock_fork);
@@ -45,12 +56,17 @@ int	take_forks(t_events *events, int l_fork, int r_fork, t_philo *philo)
 	}
 	if (if_ended(events))
 	{
-		pthread_mutex_unlock(events->forks[l_fork].lock_fork);
-		pthread_mutex_unlock(events->forks[r_fork].lock_fork);
+		release_forks2(events, l_fork, r_fork);
 		return (1);
 	}
 	print_action(events, philo->id, "has taken a fork");
 	return (0);
+}
+
+void	release_forks2(t_events *events, int l_fork, int r_fork)
+{
+	pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+	pthread_mutex_unlock(events->forks[r_fork].lock_fork);
 }
 
 void	release_forks(t_events *events, int l_fork, int r_fork)
