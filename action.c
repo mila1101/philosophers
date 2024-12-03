@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 13:55:46 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/02 12:48:20 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:38:43 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,24 +76,26 @@ void	release_forks(t_events *events, int l_fork, int r_fork)
 
 void	eat(t_philo *philo, t_events *events)
 {
+	if (!if_ended(events))
+		return ;
 	pthread_mutex_lock(&philo->philo_lock);
 	philo->last_meal_time = curr_time();
 	print_action(events, philo->id, "is eating");
+	ft_usleep(events->time_to_eat);
 	philo->meals_eaten++;
-	pthread_mutex_unlock(&philo->philo_lock);
 	if (philo->meals_eaten == events->meals_needed)
 	{
 		pthread_mutex_lock(&events->meal_lock);
 		events->eaten++;
 		pthread_mutex_unlock(&events->meal_lock);
 	}
-	ft_usleep(events->time_to_eat);
+	pthread_mutex_unlock(&philo->philo_lock);
 }
 
 void	sleep_and_think(t_philo *philo, t_events *events)
 {
 	if (if_ended(events))
-		return;
+		return ;
 	print_action(events, philo->id, "is sleeping");
 	ft_usleep(events->time_to_sleep);
 	if (!if_ended(events))
