@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 16:01:40 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/02 12:04:59 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/03 17:31:47 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	init_philo(t_events *events)
 	{
 		events->philo[i].id = i + 1;
 		events->philo[i].meals_eaten = 0;
-		events->philo[i].last_meal_time = 0;
+		//events->philo[i].last_meal_time = 0;
 		events->philo[i].events = events;
 		pthread_mutex_init(&events->philo[i].philo_lock, NULL);
 		i++;
@@ -49,6 +49,7 @@ t_events	*init_event_values(char **argv)
 	events->eaten = 0;
 	pthread_mutex_init(&events->meal_lock, NULL);
 	events->dead = 0;
+	events->starter = 0;
 	return (events);
 }
 

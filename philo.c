@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 15:39:41 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/03 13:51:40 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/03 18:01:31 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	i_philo(philo, &events, &l_fork, &r_fork);
+	while ( events->starter != 1 )
+		;
 	while (!events->dead)
-	{
+	{+
 		pthread_mutex_lock(events->dead_mutex);
 		if (events->dead || (events->meals_needed != -1 && philo->meals_eaten >= events->meals_needed))
 		{
@@ -42,7 +44,7 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(events->dead_mutex);
 		if (take_forks(events, l_fork, r_fork, philo))
 			break ;
-		eat(philo, events);
+		eat(philo, events, l_fork, r_fork);
 		release_forks(events, l_fork, r_fork);
 		if (if_ended(events))
 			break ;
@@ -71,8 +73,10 @@ int	init_threads(t_events *events, pthread_t *monitor)
 		if (pthread_create(&events->philo[i].thread,
 				NULL, routine, &events->philo[i]))
 			return (0);
+		usleep(10);
 		i++;
 	}
+	events->starter = 1;
 	if (pthread_create(monitor, NULL, death_monitor, events))
 		return (0);
 	return (1);

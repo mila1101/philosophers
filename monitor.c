@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:06:16 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/03 13:44:25 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/03 17:48:57 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static int	check_philosopher_death(t_events *events)
 		}
 		pthread_mutex_unlock(&events->philo[i].philo_lock);
 		i++;
+		usleep(10);
 	}
 	return (0);
 }

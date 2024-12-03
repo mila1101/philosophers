@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/02 12:48:56 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/03 18:00:13 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_events
 	int				eaten;
 	long			start;
 	int				dead;
+	int				starter;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	*dead_mutex;
@@ -66,7 +67,7 @@ void				i_philo(t_philo *philo, t_events **events, int *l_fork, int *r_fork);
 int					take_forks(t_events *events, int l_fork, int r_fork, t_philo *philo);
 void				release_forks(t_events *events, int l_fork, int r_fork);
 void				release_forks2(t_events *events, int l_fork, int r_fork);
-void				eat(t_philo *philo, t_events *events);
+void				eat(t_philo *philo, t_events *events, int l_fork, int r_fork);
 void				sleep_and_think(t_philo *philo, t_events *events);
 
 /* UTILS */
