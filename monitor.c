@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:06:16 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/03 17:48:57 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:41:01 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,10 @@ static int	check_all_ate(t_events *events)
 			all_ate = 0;
 		pthread_mutex_unlock(&events->philo[i].philo_lock);
 		i++;
+		usleep(10);
 	}
 	if (all_ate && events->meals_needed != -1)
 	{
-		pthread_mutex_lock(events->dead_mutex);
-		events->dead = 1;
-		pthread_mutex_unlock(events->dead_mutex);
 		return (1);
 	}
 	return (0);
@@ -86,3 +84,4 @@ void	*death_monitor(void *arg)
 	}
 	return (NULL);
 }
+
