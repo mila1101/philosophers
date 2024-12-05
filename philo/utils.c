@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 16:21:01 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/02 12:32:22 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:42:24 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,16 @@ int	check_input(char **argv)
 		i++;
 	}
 	return (0);
+}
+
+void	release_forks2(t_events *events, int l_fork, int r_fork)
+{
+	pthread_mutex_unlock(events->forks[l_fork].lock_fork);
+	pthread_mutex_unlock(events->forks[r_fork].lock_fork);
+}
+
+void	release_forks(t_events *events, int l_fork, int r_fork)
+{
+	pthread_mutex_unlock(events->forks[r_fork].lock_fork);
+	pthread_mutex_unlock(events->forks[l_fork].lock_fork);
 }

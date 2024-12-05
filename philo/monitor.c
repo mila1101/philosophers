@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 11:06:16 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/04 14:41:01 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:35:52 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,3 @@ void	*death_monitor(void *arg)
 	}
 	return (NULL);
 }
-

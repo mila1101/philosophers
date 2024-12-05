@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 14:29:50 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/03 18:00:13 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:49:09 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,39 @@ void				init_philo(t_events *events);
 t_events			*init_event_values(char **argv);
 t_events			*init_events(char **argv);
 t_events			*cleanup_events(t_events *events);
+void				i_philo(t_philo *philo, t_events **events,
+						int *l_fork, int *r_fork);
+
+/* ROUTINE */
+int					if_ended(t_events *events);
+void				*routine(void *arg);
+
+/* MONITOR */
 void				*death_monitor(void *arg);
 
 /* ACTION */
-void				i_philo(t_philo *philo, t_events **events, int *l_fork, int *r_fork);
-int					take_forks(t_events *events, int l_fork, int r_fork, t_philo *philo);
-void				release_forks(t_events *events, int l_fork, int r_fork);
-void				release_forks2(t_events *events, int l_fork, int r_fork);
-void				eat(t_philo *philo, t_events *events, int l_fork, int r_fork);
+int					one_philo(t_events *events, int l_fork, t_philo *philo);
+int					take_forks(t_events *events, int l_fork,
+						int r_fork, t_philo *philo);
+void				eat(t_philo *philo, t_events *events,
+						int l_fork, int r_fork);
 void				sleep_and_think(t_philo *philo, t_events *events);
+
+/* PHILO */
+int					check_args(int argc);
+int					init_threads(t_events *events, pthread_t *monitor);
+void				join_threads(t_events *events, pthread_t monitor);
+
+/* TIME */
+long				curr_time(void);
+int					ft_usleep(useconds_t time);
+void				print_action(t_events *events, int id, const char *action);
 
 /* UTILS */
 int					ft_atoi(const char *str);
-int					if_ended(t_events *events);
-long				curr_time(void);
-void				print_action(t_events *events, int id, const char *action);
-int					ft_usleep(useconds_t time);
 int					ft_isdigit(char *str);
 int					check_input(char **argv);
+void				release_forks(t_events *events, int l_fork, int r_fork);
+void				release_forks2(t_events *events, int l_fork, int r_fork);
 
 #endif

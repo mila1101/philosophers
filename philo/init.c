@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 16:01:40 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/03 17:31:47 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:35:25 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,10 @@ void	init_philo(t_events *events)
 
 	events->start = curr_time();
 	i = 0;
-	while(i < events->philo_num)
+	while (i < events->philo_num)
 	{
 		events->philo[i].id = i + 1;
 		events->philo[i].meals_eaten = 0;
-		//events->philo[i].last_meal_time = 0;
 		events->philo[i].events = events;
 		pthread_mutex_init(&events->philo[i].philo_lock, NULL);
 		i++;
@@ -78,6 +77,19 @@ t_events	*init_events(char **argv)
 		i++;
 	}
 	return (events);
+}
+
+void	i_philo(t_philo *philo, t_events **events, int *l_fork, int *r_fork)
+{
+	*events = philo->events;
+	*l_fork = philo->id - 1;
+	*r_fork = philo->id % (*events)->philo_num;
+	pthread_mutex_lock(&philo->philo_lock);
+	philo->last_meal_time = curr_time();
+	pthread_mutex_unlock(&philo->philo_lock);
+	print_action(*events, philo->id, "is thinking");
+	if (philo->id % 2 == 0)
+		ft_usleep((*events)->time_to_eat / 2);
 }
 
 t_events	*cleanup_events(t_events *events)

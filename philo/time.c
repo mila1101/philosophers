@@ -6,7 +6,7 @@
 /*   By: msoklova <msoklova@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:48:29 by msoklova          #+#    #+#             */
-/*   Updated: 2024/12/03 17:03:39 by msoklova         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:42:32 by msoklova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 long	curr_time(void)
 {
-	struct timeval  tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int			ft_usleep(useconds_t time)
+int	ft_usleep(useconds_t time)
 {
 	long	start;
 
